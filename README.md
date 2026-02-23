@@ -11,3 +11,4 @@ The point is to avoid the vibe-coding trap, where the user ask the AI to do all 
 
 <img width="1423" height="572" alt="image" src="https://github.com/user-attachments/assets/999ff9a9-0f62-4ae7-9319-9875a2d6c437" />
 
+<img width="1410" height="1301" alt="image" src="https://github.com/user-attachments/assets/4cad7183-c2cc-411d-9a99-5428fcecf22c" />
