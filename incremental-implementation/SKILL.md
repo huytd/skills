@@ -42,6 +42,26 @@ Use the `AskUserQuestion` tool to ask: "Does this breakdown look right? Anything
 
 Wait for the user to confirm before starting.
 
+## Step 2b: Initialize progress.md
+
+Once the chunk breakdown is confirmed, create a `progress.md` file in the project root (or alongside the plan file if one was provided). This file is the implementation log — it will be updated after every chunk.
+
+Seed it with the plan overview and chunk list:
+
+```markdown
+# Implementation Progress
+
+## Plan Overview
+[1–3 sentence summary of what's being built]
+
+## Chunks
+- [ ] [1] Chunk name — brief description
+- [ ] [2] Chunk name — brief description
+...
+
+---
+```
+
 ## Step 3: Work Through Each Chunk
 
 For each chunk, follow this sequence — every time, without skipping steps.
@@ -58,29 +78,98 @@ Use the `AskUserQuestion` tool to ask if the user has any questions or wants to 
 
 Write the code. Stay focused on what the chunk describes. Resist the urge to clean up adjacent code, add extra features, or sneak in improvements that weren't part of the plan — those belong in their own chunks.
 
-### 3d. Visualize
+### 3d. Visualize and Log
 
-After implementation, show the user what was built. Choose the format that communicates the change most clearly:
+After implementation, show the user what was built **and append the chunk's entry to `progress.md`**.
 
-**C4-style ASCII diagram** — best for structural changes (new services, layers, modules, data flow):
+**Choose a Mermaid diagram type** that best communicates the change:
+
+- **`graph LR`** — data flow, request paths, module dependencies
+- **`sequenceDiagram`** — request/response cycles, multi-step logic, API calls
+- **`classDiagram`** — object relationships, interface hierarchies
+- **`flowchart TD`** — conditional logic, branching decision trees
+
+Always show a **before** diagram (what existed prior) and an **after** diagram (what exists now). If nothing existed before, label the before section "Before: nothing" and skip the diagram.
+
+Mark new nodes with a `:::new` CSS class or a `(NEW)` label suffix. Mark modified nodes with `(CHANGED)`.
+
+**Append to `progress.md` after each chunk:**
+
+```markdown
+---
+
+## Chunk [N]: [Chunk Name]
+
+**Status:** ✅ Complete
+**Files changed:** `src/agent/loop.ts` (created), `src/providers/base.ts` (created)
+
+### What changed
+[2–4 sentences explaining what was built, what problem it solves, and how it connects to neighboring chunks.]
+
+### Before
+
+[Mermaid diagram of the system state before this chunk, OR "Before: nothing" if this is the first chunk]
+
+### After
+
+[Mermaid diagram showing the full updated system with new/changed elements labeled]
+
+### Data / Logic Flow
+
+[Optional: a sequence or flowchart diagram walking through how data moves through what was just built. Use this when the "after" structural diagram doesn't capture runtime behavior well.]
 ```
-[User FE] --> [POST /messages] --> [Agent Loop] ---------> [LLM Provider]
-                                        |
-                                  [Tool Executor]
-                                  /      |      \
-                         [web_search] [web_fetch] [load_skill]
+
+**Example entry:**
+
+````markdown
+---
+
+## Chunk 4: Agentic Loop Skeleton
+
+**Status:** ✅ Complete
+**Files changed:** `src/agent/loop.ts` (created), `src/agent/types.ts` (created)
+
+### What changed
+Introduced the core agentic loop that drives multi-turn conversations. It receives a user message, appends it to history, calls the LLM, and streams the response. Tool execution is stubbed — it will be wired in Chunk 5.
+
+### Before
+
+```mermaid
+graph LR
+  FE[User FE] --> API[REST API]
+  API --> LLM[LLM Provider]
 ```
-Keep diagrams tight (under 20 lines). Mark new elements with **(NEW)** and modified elements with **(CHANGED)**.
 
-**Concise flow walkthrough** — best for logic-heavy changes:
-> "When a message arrives: (1) load history from JSON → (2) build system prompt with skill frontmatter → (3) call LLM with tool list → (4) if tool_use returned, execute and loop → (5) stream final response via SSE"
+### After
 
-**File summary** — best for scaffolding or setup chunks:
-- `src/agent/loop.ts` — drives multi-turn tool calls, streams tokens
-- `src/providers/base.ts` — the interface all LLM adapters must implement
-- `config.json` — API keys, default model, MCP server definitions
+```mermaid
+graph LR
+  FE[User FE] --> API[REST API]
+  API --> LOOP[Agent Loop NEW]
+  LOOP --> LLM[LLM Provider]
+  LOOP --> TOOLS[Tool Executor stub NEW]
+  LOOP --> HIST[Conversation History CHANGED]
+```
 
-Pick one format per chunk — whichever makes the change most obvious. Don't combine all three.
+### Data / Logic Flow
+
+```mermaid
+sequenceDiagram
+  participant FE as User FE
+  participant API as REST API
+  participant Loop as Agent Loop
+  participant LLM as LLM Provider
+
+  FE->>API: POST /messages
+  API->>Loop: run(message, history)
+  Loop->>LLM: chat(history + message)
+  LLM-->>Loop: stream tokens
+  Loop-->>API: streamed response
+  API-->>FE: SSE chunks
+```
+````
+
+Keep the inline chat summary brief — the `progress.md` entry is the durable record. Don't duplicate all the diagram content in chat; a short prose summary and a pointer ("see progress.md for diagrams") is enough.
 
 ### 3e. Verify
 
@@ -120,12 +209,29 @@ Same for plan errors: if something in the plan doesn't make sense or conflicts w
 
 ## Wrapping Up
 
-After all chunks are verified, give a brief final summary:
-- What was built across the whole implementation
-- How the major pieces connect to each other
-- What to do next (how to run it, what's missing, what's a natural next phase)
+After all chunks are verified:
 
-This leaves the user with a clear mental model of the complete system, not just the last chunk they approved.
+1. **Finalize `progress.md`** — append a closing section:
+
+```markdown
+---
+
+## Final System Overview
+
+### Architecture
+
+[A single Mermaid diagram showing the complete system as built — all layers, modules, and data flows]
+
+### Summary
+[3–5 bullets: what was built, how pieces connect, what to do next]
+```
+
+2. **Give a brief inline summary** in chat:
+   - What was built across the whole implementation
+   - How the major pieces connect to each other
+   - What to do next (how to run it, what's missing, what's a natural next phase)
+
+The `progress.md` file is the durable artifact the user can keep, share, or reference later. The inline summary is just a pointer to orient them in the moment.
 
 ---
 
