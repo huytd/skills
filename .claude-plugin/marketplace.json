@@ -6,18 +6,9 @@
   },
   "plugins": [
     {
-      "name": "incremental-implementation",
-      "source": "./incremental-implementation",
-      "description": "Incremental implement a plan step by step",
-      "version": "1.0.0",
-      "author": {
-        "name": "Huy Tran"
-      }
-    },
-    {
-      "name": "review-diff",
-      "source": "./review-diff",
-      "description": "Review a git diff, output as a markdown with diagrams to visualize the changes",
+      "name": "huy-skills",
+      "source": "./",
+      "description": "Skills from Huy's Repository",
       "version": "1.0.0",
       "author": {
         "name": "Huy Tran"
