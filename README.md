@@ -20,3 +20,7 @@ The point is to avoid the vibe-coding trap, where the user ask the AI to do all 
 ### Review Diff
 
 This skill create a markdown document contains the diagram explains the system before and after the change, as well as the detailed walkthrough the code change, based on the current `git diff`, to make it easier to understand what's going on. It can also being used to review any PR.
+
+### Walkthrough
+
+Another skill to improve code review experience, this one run directly in the Claude Code session. It will go through each change in the codebase, one by one. Explain what was the code's behavior before and after the change.
