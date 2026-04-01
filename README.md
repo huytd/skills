@@ -3,6 +3,12 @@ Some custom skills I created for Claude Code
 
 ## What's inside?
 
+### Create Wiki Skill
+
+Create a DeepWiki-style documentation of your codebase.
+
+<img width="1706" height="963" alt="image" src="https://github.com/user-attachments/assets/e2b77920-6cb7-4b3b-b192-a1d334e3ae30" />
+
 ### Incremental Implementation Skill
 
 Analyze a plan, break it down into smaller manageble chunks, figure out the dependency between them, implement step by step instead of bulding the whole thing all at once.
