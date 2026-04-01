@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} — Wiki</title>
+<style>
+  /* ============================================
+     Wiki Template — Neutral style
+     No brand colors. Pure grayscale + desaturated
+     semantic colors. Light default, dark via
+     html.dark class.
+
+     If the project has a DESIGN.md, replace these
+     CSS variables with the project's design tokens.
+     ============================================ */
+
+  /* --- Light mode (default) --- */
+  :root {
+    --bg: #F7F7F8;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #EDEDF0;
+    --border: #D4D4D8;
+    --border-strong: #A1A1AA;
+    --text: #18181B;
+    --text-muted: #71717A;
+    --text-subtle: #A1A1AA;
+    --accent: #3F3F46;
+    --accent-hover: #27272A;
+    --accent-surface: #F4F4F5;
+    --accent-border: #A1A1AA;
+    --green: #15803D;
+    --green-surface: #F0FDF4;
+    --orange: #B45309;
+    --orange-surface: #FFFBEB;
+    --red: #B91C1C;
+    --red-surface: #FEF2F2;
+    --blue: #1D4ED8;
+    --blue-surface: #EFF6FF;
+    --purple: #6D28D9;
+    --purple-surface: #F5F3FF;
+    --cyan: #0E7490;
+    --cyan-surface: #ECFEFF;
+    --shadow-flat: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-menu: 0 4px 6px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  /* --- Dark mode --- */
+  html.dark {
+    --bg: #18181B;
+    --bg-secondary: #27272A;
+    --bg-tertiary: #3F3F46;
+    --border: #3F3F46;
+    --border-strong: #52525B;
+    --text: #FAFAFA;
+    --text-muted: #A1A1AA;
+    --text-subtle: #52525B;
+    --accent: #D4D4D8;
+    --accent-hover: #FAFAFA;
+    --accent-surface: #27272A;
+    --accent-border: #71717A;
+    --green: #4ADE80;
+    --green-surface: #14532D;
+    --orange: #FBBF24;
+    --orange-surface: #78350F;
+    --red: #F87171;
+    --red-surface: #7F1D1D;
+    --blue: #60A5FA;
+    --blue-surface: #1E3A5F;
+    --purple: #A78BFA;
+    --purple-surface: #2E1065;
+    --cyan: #22D3EE;
+    --cyan-surface: #164E63;
+    --shadow-flat: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-menu: 0 4px 6px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  /* --- Base --- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-header { margin-bottom: 24px; padding: 0 8px; }
+  .sidebar-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .sidebar-header .version {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+  .sidebar nav { flex: 1; }
+  .sidebar nav a {
+    display: block;
+    padding: 6px 12px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.15s;
+    margin-bottom: 1px;
+  }
+  .sidebar nav a:hover {
+    background: var(--bg-tertiary);
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  /* --- Main content --- */
+  .main {
+    margin-left: calc(260px + (100% - 260px - 900px) / 2);
+    margin-right: auto;
+    max-width: 900px;
+    padding: 40px 32px 80px;
+    min-height: 100vh;
+  }
+
+  /* --- Hero (flat, not a card) --- */
+  .hero {
+    background: transparent;
+    border: none;
+    padding: 40px 0;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .hero .subtitle { font-size: 16px; color: var(--text-muted); max-width: 640px; line-height: 1.6; }
+  .hero .tech-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .hero .tech-badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: var(--accent-surface);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  /* --- Typography --- */
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin: 48px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 28px 0 12px;
+    color: var(--text);
+  }
+  p { margin-bottom: 16px; color: var(--text); }
+  ul, ol { margin-bottom: 16px; padding-left: 24px; color: var(--text); }
+  li { margin-bottom: 6px; }
+  strong { font-weight: 600; }
+
+  /* --- Code --- */
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    background: var(--bg-tertiary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  pre {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* --- Tables --- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border-bottom: 2px solid var(--border);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:hover { background: var(--bg-tertiary); }
+
+  /* --- Tags (for HTTP methods, status labels) --- */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-green { background: var(--green-surface); color: var(--green); }
+  .tag-blue { background: var(--blue-surface); color: var(--blue); }
+  .tag-red { background: var(--red-surface); color: var(--red); }
+  .tag-orange { background: var(--orange-surface); color: var(--orange); }
+  .tag-purple { background: var(--purple-surface); color: var(--purple); }
+  .tag-cyan { background: var(--cyan-surface); color: var(--cyan); }
+
+  /* --- Callout boxes --- */
+  .callout {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout.info {
+    background: var(--blue-surface);
+    border-left: 4px solid var(--blue);
+    color: var(--text);
+  }
+  .callout.warn {
+    background: var(--orange-surface);
+    border-left: 4px solid var(--orange);
+    color: var(--text);
+  }
+
+  /* --- Flow diagrams --- */
+  .flow { margin-bottom: 16px; overflow-x: auto; }
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .flow-step {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .flow-step.blue { background: var(--blue-surface); color: var(--blue); }
+  .flow-step.green { background: var(--green-surface); color: var(--green); }
+  .flow-step.orange { background: var(--orange-surface); color: var(--orange); }
+  .flow-step.purple { background: var(--purple-surface); color: var(--purple); }
+  .flow-step.cyan { background: var(--cyan-surface); color: var(--cyan); }
+  .flow-arrow { margin: 0 8px; color: var(--text-subtle); font-size: 18px; }
+
+  /* --- File tree --- */
+  .file-tree {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'SF Mono', 'Fira Code', Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    white-space: pre;
+  }
+  .file-tree .dir { color: var(--accent); font-weight: 600; }
+  .file-tree .file { color: var(--text); }
+  .file-tree .comment { color: var(--text-muted); font-style: italic; }
+
+  /* --- Cards grid (for tech stack or feature grids) --- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow-flat);
+  }
+  .card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .card p { font-size: 13px; color: var(--text-muted); margin-bottom: 0; }
+
+  /* --- Responsive --- */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: auto; margin-right: auto; padding: 24px 20px 60px; }
+  }
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .hero { padding: 24px 0; }
+    .hero h1 { font-size: 24px; }
+  }
+
+  /* --- Scrollbar --- */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  /* --- Theme toggle button --- */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 16px;
+    transition: all 0.15s;
+    width: 100%;
+    justify-content: center;
+  }
+  .theme-toggle:hover { background: var(--border); color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h3>{{PROJECT_NAME}} <span class="version">Wiki</span></h3>
+  </div>
+  <nav>
+    <!-- SIDEBAR_LINKS -->
+    <!-- Generate <a href="#section-id">Section Name</a> for each section -->
+    <!-- Example:
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#api-routes">API Routes</a>
+    <a href="#project-structure">Project Structure</a>
+    <a href="#commands">Development</a>
+    -->
+  </nav>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <span id="themeIcon">&#9790;</span>
+    <span id="themeLabel">Dark mode</span>
+  </button>
+</div>
+
+<main class="main">
+
+  <!-- CONTENT_SECTIONS -->
+
+  <!-- Start with the hero section: -->
+  <!--
+  <div class="hero" id="overview">
+    <h1>Project Name</h1>
+    <p class="subtitle">A one-or-two sentence description of what the project does.</p>
+    <div class="tech-badges">
+      <span class="tech-badge">Technology</span>
+      <span class="tech-badge">Framework</span>
+    </div>
+  </div>
+  -->
+
+  <!-- Then add content sections: -->
+  <!--
+  <h2 id="section-id">Section Title</h2>
+  <p>Explanatory content...</p>
+  -->
+
+  <!-- End with a footer: -->
+  <!--
+  <hr style="margin-top: 48px; border-color: var(--border);">
+  <p style="text-align: center; color: var(--text-subtle); font-size: 12px; margin-top: 24px;">
+    {{PROJECT_NAME}} &mdash; Generated from codebase analysis
+  </p>
+  -->
+
+</main>
+
+<script>
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  updateToggleButton(isDark);
+}
+function updateToggleButton(isDark) {
+  document.getElementById('themeIcon').innerHTML = isDark ? '&#9788;' : '&#9790;';
+  document.getElementById('themeLabel').textContent = isDark ? 'Light mode' : 'Dark mode';
+}
+(function() {
+  var saved = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var isDark = saved === 'dark' || (!saved && prefersDark);
+  if (isDark) document.documentElement.classList.add('dark');
+  document.addEventListener('DOMContentLoaded', function() { updateToggleButton(isDark); });
+})();
+</script>
+</body>
+</html>
