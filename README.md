@@ -4,26 +4,28 @@ Some custom skills I created for Claude Code.
 
 ## Installation
 
-You can install individual skills directly via the Claude plugin URL — no cloning required.
+### Step 1 — Add the marketplace
 
-Click a link below (or paste the URL in Claude Code → **Add Plugin from URL**):
-
-| Skill | Install URL |
-|---|---|
-| 📖 Create Wiki | `https://github.com/huytd/skills` (select `create-wiki`) |
-| 🪜 Incremental Implementation | `https://github.com/huytd/skills` (select `incremental-implementation`) |
-| 🔍 Review Diff | `https://github.com/huytd/skills` (select `review-diff`) |
-| 🚶 Walkthrough | `https://github.com/huytd/skills` (select `walkthrough`) |
-
-### One-liner: install all skills
-
-In Claude Code, run:
+Inside Claude Code, run:
 
 ```
-/install-plugin https://github.com/huytd/skills
+/plugin marketplace add huytd/skills
 ```
 
-This shows the plugin picker — you can install each skill individually or all at once.
+This registers the catalog. No plugins are installed yet.
+
+### Step 2 — Install individual skills
+
+Install only what you need:
+
+```
+/plugin install create-wiki@huytd-skills
+/plugin install incremental-implementation@huytd-skills
+/plugin install review-diff@huytd-skills
+/plugin install walkthrough@huytd-skills
+```
+
+Or browse everything via `/plugin` → **Marketplaces** tab.
 
 ---
 
