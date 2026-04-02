@@ -6,9 +6,36 @@
   },
   "plugins": [
     {
-      "name": "huy-skills",
-      "source": "./",
-      "description": "Skills from Huy's Repository",
+      "name": "create-wiki",
+      "source": "./skills/create-wiki",
+      "description": "Create a DeepWiki-style documentation of your codebase. Generates architecture diagrams, module breakdowns, and a full navigable wiki.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Huy Tran"
+      }
+    },
+    {
+      "name": "incremental-implementation",
+      "source": "./skills/incremental-implementation",
+      "description": "Analyze a plan, break it into dependency-ordered chunks, and implement step by step — avoiding the vibe-coding trap.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Huy Tran"
+      }
+    },
+    {
+      "name": "review-diff",
+      "source": "./skills/review-diff",
+      "description": "Generate a markdown document with before/after diagrams and a detailed walkthrough of the current git diff or any PR.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Huy Tran"
+      }
+    },
+    {
+      "name": "walkthrough",
+      "source": "./skills/walkthrough",
+      "description": "Walk through each change in a codebase one by one inside a Claude Code session, explaining behavior before and after each change.",
       "version": "1.0.0",
       "author": {
         "name": "Huy Tran"
